@@ -1,8 +1,8 @@
 #!/usr/bin/python
 import json
 import os
+import threading
 import time
-from numpy import true_divide
 
 import requests
 import telebot
@@ -12,6 +12,8 @@ from requests.packages import urllib3
 
 from config import (ADMIN_ID, BAKA_API, BOT_TOKEN, CHANNEL_ID, GROUP_ID,
                     HEADERS, U2_COOKIE, VERIFY_STR)
+
+lock = threading.RLock()
 
 # 请求u2头
 session = session()
@@ -84,6 +86,7 @@ def send_cn(message):
                         bot.send_sticker(message.chat.id, 'CAACAgUAAxkBAAFATDphqabbLMEQSVtvg0cvZNnoLBXciAACBQQAAphHUFWUjRgXeOSWEyIE', timeout=20)
                     else:
                         bot.send_message(message.chat.id, "请稍等正在验证... UID:" + uid, timeout=20)
+                        lock.acquire() # 线程加锁
                         test_id = uid
                         if data_seek(test_id) == 'yes':
                             bot.send_message(message.chat.id, "你已验证过，如有疑问请联系 @Ukennnn", timeout=20)
@@ -124,6 +127,7 @@ def send_cn(message):
                                 bark("群组新人验证通过通知", f"➤%20TG_UserID:%20{message.from_user.id}%0a➤%20U2_UserID:%20{test_id}%0a➤%20通过时间:%20{nowtime}%0a➤%20语言:%20cn")
                             else:
                                 bot.send_message(message.chat.id, "验证失败，请再试一遍", timeout=20)
+                        lock.release() # 线程解锁
             else:
                 bot.send_message(message.chat.id, "输入错误 请输入：`/cn UID`", parse_mode='Markdown', timeout=20)
                 bot.send_sticker(message.chat.id, 'CAACAgUAAxkBAAFATDphqabbLMEQSVtvg0cvZNnoLBXciAACBQQAAphHUFWUjRgXeOSWEyIE', timeout=20)
@@ -145,6 +149,7 @@ def send_cn(message):
                         bot.send_message(message.chat.id, "Input error Please enter.`/en UID`", parse_mode='Markdown', timeout=20)
                     else:
                         bot.send_message(message.chat.id, "Please wait is verifying... UID:" + uid, timeout=20)
+                        lock.acquire() # 线程加锁
                         test_id = uid
                         if data_seek(test_id) == 'yes':
                             bot.send_message(message.chat.id, "You have verified, if you have any questions please contact @Ukennnn", timeout=20)
@@ -170,7 +175,7 @@ def send_cn(message):
                                 bark("群组新人验证通过通知", f"➤%20TG_UserID:%20{message.from_user.id}%0a➤%20U2_UserID:%20{test_id}%0a➤%20通过时间:%20{nowtime}%0a➤%20语言:%20en")
                             else:
                                 bot.send_message(message.chat.id, "Verification failed, please try again", timeout=20)
-
+                        lock.release() # 线程解锁
             else:
                 bot.send_message(message.chat.id, "Input error Please enter.`/en UID`", parse_mode='Markdown', timeout=20)
 
@@ -191,6 +196,7 @@ def send_cn(message):
                         bot.send_message(message.chat.id, "入力エラー 入力：`/jp UID`", parse_mode='Markdown', timeout=20)
                     else:
                         bot.send_message(message.chat.id, "検証中 少々お待ちください... UID:" + uid, timeout=20)
+                        lock.acquire() # 线程加锁
                         test_id = uid
                         if data_seek(test_id) == 'yes':
                             bot.send_message(message.chat.id, "検証済みですので、ご質問があれば @Ukennn にお問い合わせください", timeout=20)
@@ -216,7 +222,7 @@ def send_cn(message):
                                 bark("群组新人验证通过通知", f"➤%20TG_UserID:%20{message.from_user.id}%0a➤%20U2_UserID:%20{test_id}%0a➤%20通过时间:%20{nowtime}%0a➤%20语言:%20jp")
                             else:
                                 bot.send_message(message.chat.id, "検証に失敗しました、もう一度試してください。", timeout=20)
-
+                        lock.release() # 线程解锁
             else:
                 bot.send_message(message.chat.id, "入力エラー 入力：`/jp UID`", parse_mode='Markdown', timeout=20)
 
