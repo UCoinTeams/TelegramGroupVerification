@@ -1,6 +1,8 @@
 #!/usr/bin/python
 import json
+import os
 import time
+from numpy import true_divide
 
 import requests
 import telebot
@@ -103,7 +105,7 @@ def send_cn(message):
                         if data_seek(test_id) == 'yes':
                             bot.send_message(message.chat.id, "你已验证过，如有疑问请联系 @Ukennnn", timeout=20)
                         else:
-                            if get_user_info(test_id) == 'yes':                            
+                            if get_user_info(test_id, message.from_user.id) == 'yes':                            
                                 text = ("*UCoin群组&频道&工具&群规声明*\n"
                                         "*群组：*\n"
                                         "[UCoin金毛食品部羡慕本部]("+ groups_invite_links(test_id) +")\n"
@@ -165,7 +167,7 @@ def send_cn(message):
                         if data_seek(test_id) == 'yes':
                             bot.send_message(message.chat.id, "You have verified, if you have any questions please contact @Ukennnn", timeout=20)
                         else:
-                            if get_user_info(test_id) == 'yes':
+                            if get_user_info(test_id, message.from_user.id) == 'yes':
                                 text = ("*UCoin Groups & Channels & Group Rules Statement*\n\n"
 
                                         "*Group.*\n"
@@ -212,7 +214,7 @@ def send_cn(message):
                         if data_seek(test_id) == 'yes':
                             bot.send_message(message.chat.id, "検証済みですので、ご質問があれば @Ukennn にお問い合わせください", timeout=20)
                         else:
-                            if get_user_info(test_id) == 'yes':
+                            if get_user_info(test_id, message.from_user.id) == 'yes':
                                 text = ("*UCoin Groups & Channels & Group Rules Statement*\n\n"
 
                                         "*Group.*\n"
@@ -359,19 +361,41 @@ def data_seek(test_id):
     return data_back                                        # 返回是否重复验证
 
 # 判断U2个人简介是否有验证信息
-def get_user_info(test_id):
-    promotion_url = 'https://u2.dmhy.org/userdetails.php?id='+str(test_id)  # 请求U2地址
-    urllib3.disable_warnings()
-    result = session.get(promotion_url)
-    html = etree.HTML(result.text.encode('utf-8'))
-    codes_list = []                                                         # 生成一个空列表
-    for li in html.xpath('//a[@class="faqlink"]'):                          # 定位
-        codes_list.append(li.xpath('./@href')[0])                           # 将网页爬取的数据写入列表
-    if VERIFY_STR in codes_list:                                            # 判断列表内是否有验证码
-        test_back = 'yes'
+def get_user_info(test_id, tg_user_id):
+    if validation_times(tg_user_id): # 验证次数是否超过预设值
+        promotion_url = 'https://u2.dmhy.org/userdetails.php?id='+str(test_id)  # 请求U2地址
+        urllib3.disable_warnings()
+        result = session.get(promotion_url)
+        html = etree.HTML(result.text.encode('utf-8'))
+        codes_list = []                                                         # 生成一个空列表
+        for li in html.xpath('//a[@class="faqlink"]'):                          # 定位
+            codes_list.append(li.xpath('./@href')[0])                           # 将网页爬取的数据写入列表
+        if VERIFY_STR in codes_list:                                            # 判断列表内是否有验证码
+            test_back = 'yes'
+        else:
+            test_back = 'no'
+        return test_back                                                        # 返回是否有验证信息
+    return 'no'
+
+# 判断验证次数是否超过预设值
+def validation_times(tg_user_id):
+    file_list = os.listdir('./valdata/')
+    if str(tg_user_id) in file_list:
+        with open(f'./valdata/{tg_user_id}', mode='r+', encoding='utf-8') as f:
+            data = f.read()
+            if data > 5:
+                return False
+            else:
+                f.seek(0)
+                f.truncate()
+                f.write(data+1)
+                f.close()
+                return True
     else:
-        test_back = 'no'
-    return test_back                                                        # 返回是否有验证信息
+        with open(f'./valdata/{tg_user_id}', mode='w', encoding='utf-8') as f:
+            f.write(1)
+            f.close()
+            return True
 
 # baka推送
 def bark(title: str, content: str):

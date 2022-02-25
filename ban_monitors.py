@@ -88,7 +88,7 @@ def main():
     scheduler.add_job(
         func=ban_checker,
         trigger='interval',
-        minutes=1
+        minutes=10
     )
     print('\n[I] 定时任务已设置')
     scheduler.start()
