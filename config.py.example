@@ -1,0 +1,22 @@
+# U2 Cookie
+U2_COOKIE = ''
+# Bot Token
+BOT_TOKEN = ''
+# U2 请求UA
+HEADERS = {'Connection': 'keep-alive',
+           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36',
+           'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+           'Accept-Language': 'zh-CN,zh;q=0.8'}
+           
+# 超级管理员 tg_id
+ADMIN_ID = 12346866
+# 群组 ID
+GROUP_ID = -100123456
+# 频道 ID
+CHANNEL_ID = -100123456
+
+# BAKA 推送
+BAKA_API = 'https://xxxxxxxx/xxxxxxxxxxxx'
+
+# 验证字段
+VERIFY_STR = '123456'
