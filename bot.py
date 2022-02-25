@@ -383,17 +383,17 @@ def validation_times(tg_user_id):
     if str(tg_user_id) in file_list:
         with open(f'./valdata/{tg_user_id}', mode='r+', encoding='utf-8') as f:
             data = f.read()
-            if data > 5:
+            if int(data) > 5:
                 return False
             else:
                 f.seek(0)
                 f.truncate()
-                f.write(data+1)
+                f.write(f'{int(data)+1}')
                 f.close()
                 return True
     else:
         with open(f'./valdata/{tg_user_id}', mode='w', encoding='utf-8') as f:
-            f.write(1)
+            f.write('1')
             f.close()
             return True
 
