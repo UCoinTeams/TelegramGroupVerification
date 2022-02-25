@@ -23,22 +23,6 @@ session.cookies = cookie_jar
 # 请求botapi
 bot = telebot.TeleBot(BOT_TOKEN)
 
-# 判断验证uid输入是否是数字
-def is_number(str):
-    try:
-        float(str)
-        return True
-    except ValueError:
-        pass
-
-    try:
-        import unicodedata
-        unicodedata.numeric(str)
-        return True
-    except (ValueError, TypeError):
-        pass
-
-    return False
 
 # 欢迎
 @bot.message_handler(commands=['start', 'help'])
@@ -91,8 +75,7 @@ def send_cn(message):
         else:
             if len(data) == 2:
                 uid = data[1]
-                check = is_number(uid)
-                if check is False:
+                if uid.isdigit() is False:
                     bot.send_message(message.chat.id, "输入错误 请输入：`/cn UID`", parse_mode='Markdown', timeout=20)
                     bot.send_sticker(message.chat.id, 'CAACAgUAAxkBAAFATDphqabbLMEQSVtvg0cvZNnoLBXciAACBQQAAphHUFWUjRgXeOSWEyIE', timeout=20)
                 else:
@@ -155,8 +138,7 @@ def send_cn(message):
         else:
             if len(data) == 2:
                 uid = data[1]
-                check = is_number(uid)
-                if check is False:
+                if uid.isdigit() is False:
                     bot.send_message(message.chat.id, "Input error Please enter.`/en UID`", parse_mode='Markdown', timeout=20)
                 else:
                     if int(uid) > 100000:
@@ -202,8 +184,7 @@ def send_cn(message):
         else:
             if len(data) == 2:
                 uid = data[1]
-                check = is_number(uid)
-                if check is False:
+                if uid.isdigit() is False:
                     bot.send_message(message.chat.id, "入力エラー 入力：`/jp UID`", parse_mode='Markdown', timeout=20)
                 else:
                     if int(uid) > 100000:
