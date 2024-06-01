@@ -1,3 +1,5 @@
-config.py
-test.json
-__pycache__/
+run.log
+*.db
+.DS_Store
+__pycache__
+config.yaml

@@ -1,0 +1,31 @@
+TG:
+  # Telegram Bot https://t.me/BotFather
+  BOT_TOKEN: 12345566:asndjakdajkxwasxccafsdf
+  BOT_USERNAME: bgm_bot # 不要@，只填写用户名
+  # Telegram Group ID
+  GROUP_ID: -100123123123
+  # Telegram Channel ID
+  CHANNEL_ID: -100123123123
+  # Admin ID
+  ADMIN_ID:
+    - 123123123
+    - 123123123
+
+U2_COOKIE: nexusphp_u2=212312dasdawedasdaw1weaqwdadsasdqwdwd1212312313wadqwd;
+BARK_URL: https://sctapi.ftqq.com/sadas3123123123
+
+# API Server
+API_SERVER:
+  POST: 6008
+  WEBSITE_BASE: https://oauth.bgm.tv:6008 # 授权回传链接 如需使用 Web 绑定功能则必须为 https
+  AUTH_KEY: sdasd-ee5dsdsf-4asdad5-9dsd0c-8asdaf82
+
+# Redis Server
+REDIS:
+  HOST: localhost
+  PORT: 6379
+  REDIS_DATABASE: 0
+  SESSION_EXPIRES: 86400
+
+# Log Level
+LOG_LEVEL: INFO
