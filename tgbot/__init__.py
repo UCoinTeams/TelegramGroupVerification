@@ -6,6 +6,7 @@ from telebot.types import (
 )
 
 from .start import send_start
+from .callback_pages import get_u2_id
 
 from utils.config_vars import config
 
@@ -14,6 +15,7 @@ bot = AsyncTeleBot(config["TG"]["BOT_TOKEN"], parse_mode="MarkdownV2")
 
 def bot_register():
     bot.register_message_handler(send_start, commands=["start"], pass_bot=True)
+    bot.register_callback_query_handler(get_u2_id, func=lambda c: c.data.startswith("gu2id"), pass_bot=True)
 
 
 async def set_bot_command():

@@ -1,6 +1,6 @@
 
 class MessageText:
-    def __init__(self, language: str):
+    def __init__(self, language: str = 'cn'):
         self.language = language
 
     def Ver_passed(self, group_link, channel_link):
@@ -70,16 +70,24 @@ class MessageText:
 
     def Welcome(self):
         return ("*欢迎使用 UCoin 入群验证机器人\n\n"
-                "Welcome to the UCoin Group Join Verification Robot\n\n"
-                "UCoin グループに入ってロボットを検証*")
+                "Welcome to use the UCoin group verification bot\\.\n\n"
+                "UCoin入群認証ボットへようこそ*")
     
-    def Repeat_error(self):
+    def Repeat_error(self, tg_id: int = None):
         if self.language == 'cn':
-            return "*您的账户被验证过，如有疑问请联系 @UkennUS *"
+            return f"*此账号已绑定 TelegramID: \\*\\*\\*\\*\\*{tg_id % 10000}\n\n是否解除该账号绑定，重新进行验证？*"
         elif self.language == 'en':
-            return "*Your account has been verified, if you have any questions, please contact @UkennUS *"
+            return f"*This account has been bound to TelegramID: \\*\\*\\*\\*\\*{tg_id % 10000}\\.\n\nDo you want to unbind this account and re\\-verify it?*"
         elif self.language == 'ja':
-            return "*あなたのアカウントは検証されています。質問がある場合は、@UkennUS に連絡してください *"
+            return f"*このアカウントは TelegramID: \\*\\*\\*\\*\\*{tg_id % 10000} にバインドされています\n\nこのアカウントのバインドを解除し、再度検証しますか？*"
+    
+    def Repeat_error_markup(self):
+        if self.language == 'cn':
+            return "解除绑定并重新验证"
+        elif self.language == 'en':
+            return "Unbind and re-verify"
+        elif self.language == 'ja':
+            return "バインドを解除して再検証する"
     
     def Ver_error(self):
         if self.language == 'cn':
@@ -121,13 +129,13 @@ class MessageText:
             self.markup = "请输入 U2 UID"
             return self
         elif self.language == 'en':
-            self.text = ("*To confirm that you are a U2 user, you now need to perform the necessary authentication steps\n\n"
+            self.text = ("*To confirm that you are a U2 user, we now need to proceed with the necessary verification steps\\.\n\n"
                          "Please send your U2 UID*"
                          "\nLanguage: en")
             self.markup = "Enter your U2 UID"
             return self
         elif self.language == 'ja':
-            self.text = ("*U2ユーザーであることを確認するために、必要な認証手順を実行する必要があります\n\n"
+            self.text = ("*U2のユーザーであることを確認するために、必要な検証手順が必要です。\n\n"
                          "U2 UID を送信してください*"
                          "\nLanguage: ja")
             self.markup = "U2 UID を入力してください"
