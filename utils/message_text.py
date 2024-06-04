@@ -108,36 +108,30 @@ class MessageText:
     def Inquiry_u2id(self, error: bool = False):
         if error:
             if self.language == 'cn':
-                self.text = ("*输入错误, 请重新输入您的 U2 UID*"
-                             "\nLanguage: cn")
+                self.text = ("*输入错误, 请重新输入您的 U2 UID*")
                 self.markup = "请重新输入 U2 UID"
                 return self
             elif self.language == 'en':
-                self.text = ("*Input error, please re-enter your U2 ID*"
-                             "\nLanguage: en")
+                self.text = ("*Input error, please re-enter your U2 ID*")
                 self.markup = "Re-enter your U2 UID"
                 return self
             elif self.language == 'ja':
-                self.text = ("*入力エラー、U2 UID を再入力してください*"
-                             "\nLanguage: ja")
+                self.text = ("*入力エラー、U2 UID を再入力してください*")
                 self.markup = "U2 UID を再入力してください"
                 return self
         elif self.language == 'cn':
             self.text = ("*为了确认您是 U2 用户, 现在需要进行必要验证步骤\n\n"
-                         "请发送您的 U2 UID*"
-                         "\nLanguage: cn")
+                         "请发送您的 U2 UID*")
             self.markup = "请输入 U2 UID"
             return self
         elif self.language == 'en':
             self.text = ("*To confirm that you are a U2 user, we now need to proceed with the necessary verification steps\\.\n\n"
-                         "Please send your U2 UID*"
-                         "\nLanguage: en")
+                         "Please send your U2 UID*")
             self.markup = "Enter your U2 UID"
             return self
         elif self.language == 'ja':
             self.text = ("*U2のユーザーであることを確認するために、必要な検証手順が必要です。\n\n"
-                         "U2 UID を送信してください*"
-                         "\nLanguage: ja")
+                         "U2 UID を送信してください*")
             self.markup = "U2 UID を入力してください"
             return self
     

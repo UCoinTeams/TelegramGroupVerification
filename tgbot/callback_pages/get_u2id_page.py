@@ -6,7 +6,7 @@ from telebot.types import (
     ForceReply,
 )
 
-from utils.config_vars import sql
+from utils.config_vars import sql, redis
 from utils.message_text import MessageText
 
 
@@ -28,8 +28,14 @@ async def get_u2_id(call: CallbackQuery, bot: AsyncTeleBot):
             reply_markup=markup,
         )
     _text = text.Inquiry_u2id()
-    await bot.send_message(
+    send_msg = await bot.send_message(
         call.message.chat.id,
         _text.text,
         reply_markup=ForceReply(selective=True, input_field_placeholder=_text.markup),
     )
+    redis.set(
+        f"msg_id:{send_msg.message_id}",
+        f"to_verify|{call.from_user.id}|{language}",
+        ex=60 * 5,
+    )
+    return
