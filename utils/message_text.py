@@ -137,15 +137,16 @@ class MessageText:
     
     def Ver_code(self, u2_id, tg_id, v_code: str):
         if self.language == 'cn':
-            self.text = (f"*UID: {u2_id} \\(TG ID: {tg_id}\\) 开始验证\n\n"
-                         f"您的验证码为: `[url={v_code}][/url]`\n\n"
-                          "请将这个验证码填写在您的 [U2 个人说明](https://u2.dmhy.org/usercp.php?action=personal) 的任何位置，\n"
-                          "完成后点击下方验证开始按钮*")
+            self.text = (f"UID: `{u2_id}` \\(`{tg_id}`\\) 开始验证\n\n"
+                         f"*您的验证标识符为:* \n\n`[url={v_code}][/url]`\n\n"
+                          "可将此标识符填写在您的 [U2 个人说明](https://u2.dmhy.org/usercp.php?action=personal) 的__任意位置__并保存，"
+                          "完成后点击下方验证开始按钮\n\n"
+                          "__注: 本标识符实际不会在个人说明页显示出来, 验证完成后可删除此标识符__")
             self.markup = "验证开始"
             return self
         elif self.language == 'en':
             self.text = (f"*UID: {u2_id} \\(TG ID: {tg_id}\\) starts verification\n\n"
-                         f"Your verification code is: `[url={v_code}][/url]`\n\n"
+                         f"Your verification identifier is: `[url={v_code}][/url]`\n\n"
                           "Please fill in this verification code in any position of your [U2 personal description](https://u2.dmhy.org/usercp.php?action=personal),\n"
                           "After completion, click the button below to start verification*")
             self.markup = "Start verification"

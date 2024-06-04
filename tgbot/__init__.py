@@ -7,7 +7,7 @@ from telebot.types import (
 )
 
 from .start import send_start
-from .callback_pages import get_u2_id
+from .callback_pages import get_u2_id, test_u2_id, verify_page
 
 from utils.config_vars import config, redis
 
@@ -34,8 +34,11 @@ async def send_reply(message: Message):
     if redis_data := redis.get(f"msg_id:{message.reply_to_message.message_id}"):
         redis_data = redis_data.decode().split("|")
         if redis_data[0] == "to_verify":
-            
-            return
+            if not await test_u2_id(message, bot, message.text, redis_data[1]):
+                pass
+            else:
+                await verify_page(message, bot, redis_data[1])
+        return redis.delete(f"msg_id:{message.reply_to_message.message_id}")
     else:
         return await bot.send_message(
             message.chat.id,
