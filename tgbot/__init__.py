@@ -40,10 +40,9 @@ def bot_register():
 
 async def to_reverify(call: CallbackQuery):
     """验证页面"""
-    _, language, u2_id = call.data.split("|")
+    _, language = call.data.split("|")
     await bot.delete_message(call.message.chat.id, call.message.message_id)
-    call.message.text = u2_id
-    return await verify_page(call.message, bot, language[1])
+    return await verify_page(call.message.reply_to_message, bot, language)
 
 
 async def approve_join(join_request: ChatJoinRequest):

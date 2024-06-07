@@ -56,18 +56,18 @@ async def test_u2_id(
             "CAACAgUAAxkBAAFATDphqabbLMEQSVtvg0cvZNnoLBXciAACBQQAAphHUFWUjRgXeOSWEyIE",
         )
         return False
-    if sql_data := sql.inqury_user(data):
+    if sql_data := sql.inqury_user(u2_id=data):
         msg = msg_text.Re_verify(sql_data[0][1])
         markup = InlineKeyboardMarkup()
         markup.add(
             InlineKeyboardButton(
-                text=msg.markup, callback_data=f"re_ver|{language}|{data}"
+                text=msg.markup, callback_data=f"re_ver|{language}"
             )
         )
-        return await bot.edit_message_text(
+        await bot.reply_to(
+            message,
             text=msg.text,
-            chat_id=message.chat.id,
-            message_id=message.message_id,
             reply_markup=markup,
         )
+        return False
     return True

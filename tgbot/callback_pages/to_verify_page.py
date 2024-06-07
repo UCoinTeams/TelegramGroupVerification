@@ -1,5 +1,6 @@
 from random import sample
 from telebot.async_telebot import AsyncTeleBot
+from asyncio import Lock
 from telebot.types import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
@@ -42,31 +43,34 @@ async def verify(call: CallbackQuery, bot: AsyncTeleBot):
             )
     redis.incr(f"ver:{call.from_user.id}", 1)
     redis.expire(f"ver:{call.from_user.id}", 60 * 60 * 24)
-    if await d_api.verify_u2_captcha(u2_id, vcode):
-        await bot.answer_callback_query(call.id, "ok!")
-        if sql_data := sql.inqury_user(u2_id=u2_id):
-            for i in sql_data:
-                await bot.ban_chat_member(
-                    chat_id=config["TG"]["GROUP_ID"], user_id=i[1]
-                )
-                await bot.kick_chat_member(
-                    chat_id=config["TG"]["CHANNEL_ID"], user_id=i[1]
-                )
-        sql.insert_user(call.from_user.id, u2_id, language)
-        await d_api.bark_notify(
-            "群组新人验证通过通知",
-            f"➤%20TG_UserID:%20{call.from_user.id}%0a➤%20U2_UserID:%20{u2_id}%0a➤%20语言:%20{language}",
-            call.from_user.id,
-        )
-        await bot.delete_message(call.message.chat.id, call.message.message_id)
-        await bot.send_message(
-            text=msg_text.Ver_passed(
-                config["TG"]["GROUP_LINK"], config["TG"]["CHANNEL_LINK"]
-            ),
-            chat_id=call.message.chat.id,
-        )
-    else:
-        await bot.answer_callback_query(call.id, "error!")
-        return await bot.send_message(
-            text=msg_text.Not_detected(), chat_id=call.message.chat.id
-        )
+    async with Lock():
+        if sql_data := sql.inqury_user(tg_id=call.from_user.id):
+            return await bot.answer_callback_query(call.id)
+        if await d_api.verify_u2_captcha(u2_id, vcode):
+            await bot.answer_callback_query(call.id, "ok!")
+            if sql_data := sql.inqury_user(u2_id=u2_id):
+                for i in sql_data:
+                    await bot.ban_chat_member(
+                        chat_id=config["TG"]["GROUP_ID"], user_id=i[1]
+                    )
+                    await bot.ban_chat_member(
+                        chat_id=config["TG"]["CHANNEL_ID"], user_id=i[1]
+                    )
+            sql.insert_user(call.from_user.id, u2_id, language)
+            await d_api.bark_notify(
+                "群组新人验证通过通知",
+                f"➤%20TG_UserID:%20{call.from_user.id}%0a➤%20U2_UserID:%20{u2_id}%0a➤%20语言:%20{language}",
+                call.from_user.id,
+            )
+            await bot.delete_message(call.message.chat.id, call.message.message_id)
+            await bot.send_message(
+                text=msg_text.Ver_passed(
+                    config["TG"]["GROUP_LINK"], config["TG"]["CHANNEL_LINK"]
+                ),
+                chat_id=call.message.chat.id,
+            )
+        else:
+            await bot.answer_callback_query(call.id, "error!")
+            return await bot.send_message(
+                text=msg_text.Not_detected(), chat_id=call.message.chat.id
+            )
