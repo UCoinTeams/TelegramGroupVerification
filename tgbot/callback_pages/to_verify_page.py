@@ -51,6 +51,11 @@ async def verify(call: CallbackQuery, bot: AsyncTeleBot):
                 await bot.kick_chat_member(
                     chat_id=config["TG"]["CHANNEL_ID"], user_id=i[1]
                 )
+        await d_api.bark_notify(
+            "群组新人验证通过通知",
+            f"➤%20TG_UserID:%20{call.from_user.id}%0a➤%20U2_UserID:%20{u2_id}%0a➤%20语言:%20{language}",
+            call.from_user.id,
+        )
         await bot.delete_message(call.message.chat.id, call.message.message_id)
         await bot.send_message(
             text=msg_text.Ver_passed(
