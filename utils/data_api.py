@@ -16,6 +16,9 @@ class DataAPI:
             },
         )
 
+    async def close(self):
+        await self.s.close()
+
     async def verify_u2_captcha(self, u2_id: int, captcha: str) -> bool:
         """验证 U2 验证码"""
         async with self.s.get(

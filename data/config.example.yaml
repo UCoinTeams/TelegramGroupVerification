@@ -4,8 +4,10 @@ TG:
   BOT_USERNAME: bgm_bot # 不要@，只填写用户名
   # Telegram Group ID
   GROUP_ID: -100123123123
+  GROUP_LINK: https://t.me/joinchat/AAAAAE7J6J1ZzjQ1Q1Q1Q1
   # Telegram Channel ID
   CHANNEL_ID: -100123123123
+  CHANNEL_LINK: https://t.me/joinchat/AAAAAE7J6J1ZzjQ1Q1Q1Q1
   # Admin ID
   ADMIN_ID:
     - 123123123
