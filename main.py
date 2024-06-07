@@ -1,10 +1,9 @@
 import asyncio
 import logging
-
 import telebot
 
 from tgbot import start_bot
-from utils.config_vars import LOG_LEVEL, sql
+from utils.config_vars import LOG_LEVEL, sql, d_api
 
 telebot.logger.setLevel(LOG_LEVEL.upper())
 logging.getLogger().setLevel(LOG_LEVEL.upper())
@@ -24,3 +23,4 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         loop.close()
         sql.close()
+        d_api.close()

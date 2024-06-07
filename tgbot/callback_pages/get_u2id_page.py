@@ -16,12 +16,14 @@ async def get_u2_id(call: CallbackQuery, bot: AsyncTeleBot):
     language = call.data.split("|")[1]
     text = MessageText(language)
     if bool(sql.inqury_user(call.from_user.id)):
+        await bot.answer_callback_query(call.id, "error!")
         return await bot.edit_message_text(
             text=text.Repeat_error(),
             chat_id=call.message.chat.id,
             message_id=call.message.message_id,
         )
     _text = text.Inquiry_u2id()
+    await bot.answer_callback_query(call.id, "ok!")
     send_msg = await bot.send_message(
         call.message.chat.id,
         _text.text,
@@ -40,7 +42,7 @@ async def test_u2_id(
 ) -> bool:
     """测试 U2 ID"""
     msg_text = MessageText(language)
-    if not data.isdigit() or len(data) < 8:
+    if not data.isdigit() or len(data) > 8:
         msg = msg_text.Inquiry_u2id(error=True)
         markup = ForceReply(selective=True, input_field_placeholder=msg.markup)
         send_msg = await bot.reply_to(message, msg.text, reply_markup=markup)

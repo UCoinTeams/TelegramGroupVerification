@@ -7,13 +7,13 @@ class MessageText:
             return (
                 "*UCoin群组&频道&工具&群规声明*\n"
                 "*群组：*\n"
-                f"[UCoin金毛食品部 羡充上流本部 (主群)]({group_link})\n"
+                f"[UCoin金毛食品部 羡充上流本部 \\(主群\\)]({group_link})\n"
                 "[UCoin English Only Group](https://t.me/joinchat/P1RbQxeaDbgtQCTvgyE4Gg)\n"
                 "[UCoin金毛食品部 游戏分部](https://t.me/joinchat/dr_HTf1VNjo5OTg1)\n"
                 "[UCoin金毛食品部 掘金分部](https://t.me/joinchat/zPSga0GOZRtjMzZl)\n"
                 "[UCoin金毛食品部 核弹分部](https://t.me/+3S_p-zHN7RoxOTNl)\n"
                 "[UCoin金毛食品部 Line 分部](http://line.me/ti/g/gU7yYyZz_v)\n"
-                "[UCoin金毛食品部 Steam(蒸汽) 分部](https://s.team/chat/fbTxLWZ6)\n"
+                "[UCoin金毛食品部 Steam \\(蒸汽\\) 分部](https://s.team/chat/fbTxLWZ6)\n"
                 "[UCoin金毛食品部 Twitter 分部](https://twitter.com/i/communities/1501161490467864582)\n"
                 "[UCoin金毛食品部 Github 分部](https://github.com/UCoinTeams)\n\n"
                 "*频道：*\n"
@@ -23,10 +23,10 @@ class MessageText:
                 "[动漫花园 U2 种子候选通知频道](https://t.me/+7WfqFTF-MqcyMGFl)\n\n"
                 "*U2相关脚本&工具*：\n"
                 "[U2状态检测](https://stats.uptimerobot.com/216D5tkXBy/785888780)\n"
-                "[U2自动2.33优惠脚本](https://gist.github.com/littleya/86cd895f97b614ebea376a1008291ccf#file-u2auto2-33x-py)\n"
+                "[U2自动2\\.33优惠脚本](https://gist.github.com/littleya/86cd895f97b614ebea376a1008291ccf#file-u2auto2-33x-py)\n"
                 "[U2做种页显示地区猴油脚本](https://gist.github.com/c0re100/3dea464145bf6abc8b1332a463fed525)"
                 "[U2一键调戏U2娘猴油脚本（请勿滥用](https://cdn.jsdelivr.net/gh/mwhds97/PT@master/scripts/U2%E5%A8%98+.user.js)\n"
-                "[U2 Tool Box - 通过 Telegram Bot 实现的签到、查询、施放魔法等功能的机器人](https://u2.dmhy.org/forums.php?action=viewtopic&topicid=13474&page=last#pid149883)\n"
+                "[U2 Tool Box \\- 通过 Telegram Bot 实现的签到、查询、施放魔法等功能的机器人](https://u2.dmhy.org/forums.php?action=viewtopic&topicid=13474&page=last#pid149883)\n"
                 "[U2批量发糖脚本](https://share.a0000778.name/userscript/U2/gift.user.js)\n"
                 "[U2无法访问解决办法](https://t.me/c/1364462408/548530)\n"
                 "[U2家族树查询](https://u2.ukenn.top/)\n"
@@ -34,25 +34,12 @@ class MessageText:
                 "[UCoin系列群组群规&免责声明](https://t.me/c/1364462408/459536)\n\n"
                 "编辑于2024年5月"
             )
-        elif self.language == "en":
+        elif self.language == "en" or self.language == "ja":
             return (
                 "*UCoin Groups & Channels & Group Rules Statement*\n\n"
-                "*Group.*\n"
+                "*Group\\.*\n"
                 "[UCoin English Only Group](https://t.me/joinchat/P1RbQxeaDbgtQCTvgyE4Gg)\n\n"
-                "*Channel.*\n"
-                f"[U2 Rss Subscription Channel]({channel_link})\n"
-                "[U2 Rss BDMV Subscription Channel](https://t.me/joinchat/UOaDykBRORQSIlYQ)\n"
-                "[U2 Seeds Discount Notification Channel](https://t.me/joinchat/RuCiWjkv34hMv7PM)\n"
-                "[U2 Seeds Candidate Notification Channel](https://t.me/+7WfqFTF-MqcyMGFl)\n\n"
-                "[UCoin Group Rules & Disclaimer](https://t.me/c/1364462408/459536)\n\n"
-                "Edited in September 2022"
-            )
-        elif self.language == "ja":
-            return (
-                "*UCoin Groups & Channels & Group Rules Statement*\n\n"
-                "*Group.*\n"
-                "[UCoin English Only Group](https://t.me/joinchat/P1RbQxeaDbgtQCTvgyE4Gg)\n\n"
-                "*Channel.*\n"
+                "*Channel\\.*\n"
                 f"[U2 Rss Subscription Channel]({channel_link})\n"
                 "[U2 Rss BDMV Subscription Channel](https://t.me/joinchat/UOaDykBRORQSIlYQ)\n"
                 "[U2 Seeds Discount Notification Channel](https://t.me/joinchat/RuCiWjkv34hMv7PM)\n"

@@ -34,6 +34,7 @@ async def verify(call: CallbackQuery, bot: AsyncTeleBot):
     msg_text = MessageText(language)
     if degree := redis.get(f"ver:{call.from_user.id}"):
         if int(degree) >= 5:
+            await bot.answer_callback_query(call.id, "error!")
             return await bot.edit_message_text(
                 text=msg_text.Ver_error(),
                 chat_id=call.message.chat.id,
@@ -51,6 +52,7 @@ async def verify(call: CallbackQuery, bot: AsyncTeleBot):
                 await bot.kick_chat_member(
                     chat_id=config["TG"]["CHANNEL_ID"], user_id=i[1]
                 )
+        sql.insert_user(call.from_user.id, u2_id, language)
         await d_api.bark_notify(
             "群组新人验证通过通知",
             f"➤%20TG_UserID:%20{call.from_user.id}%0a➤%20U2_UserID:%20{u2_id}%0a➤%20语言:%20{language}",
