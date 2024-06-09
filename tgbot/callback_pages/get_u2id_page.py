@@ -42,7 +42,7 @@ async def test_u2_id(
 ) -> bool:
     """测试 U2 ID"""
     msg_text = MessageText(language)
-    if not data.isdigit() or len(data) > 8:
+    if not data.isdigit() or len(data) > 5:
         msg = msg_text.Inquiry_u2id(error=True)
         markup = ForceReply(selective=True, input_field_placeholder=msg.markup)
         send_msg = await bot.reply_to(message, msg.text, reply_markup=markup)

@@ -50,12 +50,13 @@ async def verify(call: CallbackQuery, bot: AsyncTeleBot):
             await bot.answer_callback_query(call.id, "ok!")
             if sql_data := sql.inqury_user(u2_id=u2_id):
                 for i in sql_data:
-                    await bot.ban_chat_member(
+                    await bot.unban_chat_member(
                         chat_id=config["TG"]["GROUP_ID"], user_id=i[1]
                     )
-                    await bot.ban_chat_member(
+                    await bot.unban_chat_member(
                         chat_id=config["TG"]["CHANNEL_ID"], user_id=i[1]
                     )
+                    sql.delete_user(tg_id=i[1])
             sql.insert_user(call.from_user.id, u2_id, language)
             await d_api.bark_notify(
                 "群组新人验证通过通知",

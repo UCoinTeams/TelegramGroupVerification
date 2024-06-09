@@ -41,6 +41,7 @@ def bot_register():
 async def to_reverify(call: CallbackQuery):
     """验证页面"""
     _, language = call.data.split("|")
+    await bot.answer_callback_query(call.id)
     await bot.delete_message(call.message.chat.id, call.message.message_id)
     return await verify_page(call.message.reply_to_message, bot, language)
 
