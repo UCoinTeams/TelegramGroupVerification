@@ -32,7 +32,7 @@ class MessageText:
                 "[U2家族树查询](https://u2.ukenn.top/)\n"
                 "[U2怎么看种子的发种者](https://t.me/c/1364462408/1064844)\n\n"
                 "[UCoin系列群组群规&免责声明](https://t.me/c/1364462408/459536)\n\n"
-                "编辑于2024年5月"
+                "编辑于2024年6月"
             )
         elif self.language == "en" or self.language == "ja":
             return (
@@ -54,14 +54,14 @@ class MessageText:
             "Welcome to use the UCoin group verification bot\\.\n\n"
             "UCoin入群認証ボットへようこそ*"
         )
-    
+
     def Repeat_error(self):
         if self.language == "cn":
-            return "*此用户已绑定过 U2 账号*"
+            return "*您已绑定过 U2 账号，如有疑问请联系 @UkennUS*"
         elif self.language == "en":
-            return "*This user has already bound a U2 account*"
+            return "*You have already bound the U2 account\\. If you have any questions, please contact @UkennUS\\.*"
         elif self.language == "ja":
-            return "*このユーザーはすでに U2 アカウント にバインドされています*"
+            return "*U2アカウントは既にバインドされています。ご質問がある場合は、@UkennUS までお問い合わせください。*"
 
     def Re_verify(self, tg_id: int = None):
         if self.language == "cn":
@@ -140,19 +140,19 @@ class MessageText:
             return self
         elif self.language == "en":
             self.text = (
-                f"*UID: {u2_id} \\(TG ID: {tg_id}\\) starts verification\n\n"
-                f"Your verification identifier is: `[url={v_code}][/url]`\n\n"
+                f"UID: {u2_id} \\(`{tg_id}`\\) starts verification\n\n"
+                f"*Your verification identifier is:* \n\n`[url={v_code}][/url]`\n\n"
                 "Please fill in this verification code in any position of your [U2 personal description](https://u2.dmhy.org/usercp.php?action=personal),\n"
-                "After completion, click the button below to start verification*"
+                "After completion, click the button below to start verification\\."
             )
             self.markup = "Start verification"
             return self
         elif self.language == "ja":
             self.text = (
-                f"*UID: {u2_id} \\(TG ID: {tg_id}\\) 検証を開始します\n\n"
-                f"あなたの検証コードは: `[url={v_code}][/url]`\n\n"
+                f"UID: {u2_id} \\(`{tg_id}`\\) 検証を開始します\n\n"
+                f"*あなたの検証コードは:* \n\n`[url={v_code}][/url]`\n\n"
                 "この検証コードを [U2個人説明](https://u2.dmhy.org/usercp.php?action=personal) の任意の位置に入力してください。\n"
-                "完了後、下のボタンをクリックして検証を開始します*"
+                "完了後、下のボタンをクリックして検証を開始します。"
             )
-            self.markup = "検証を開始します"
+            self.markup = "検証を開始する"
             return self

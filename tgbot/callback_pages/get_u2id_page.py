@@ -7,7 +7,7 @@ from telebot.types import (
     ForceReply,
 )
 
-from utils.config_vars import sql, redis, config
+from utils.config_vars import sql, redis
 from utils.message_text import MessageText
 
 
@@ -60,9 +60,7 @@ async def test_u2_id(
         msg = msg_text.Re_verify(sql_data[0][1])
         markup = InlineKeyboardMarkup()
         markup.add(
-            InlineKeyboardButton(
-                text=msg.markup, callback_data=f"re_ver|{language}"
-            )
+            InlineKeyboardButton(text=msg.markup, callback_data=f"re_ver|{language}")
         )
         await bot.reply_to(
             message,
