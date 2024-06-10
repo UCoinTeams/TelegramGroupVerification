@@ -17,6 +17,7 @@ logging.basicConfig(
 
 if __name__ == '__main__':
     sql.create_user_db()
+    sql.admin_log_db()
     try:
         loop = asyncio.get_event_loop()
         loop.run_until_complete(start_bot())
