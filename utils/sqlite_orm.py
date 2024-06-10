@@ -25,7 +25,7 @@ class SQLite:
             """
         )
         self.conn.commit()
-    
+
     def admin_log_db(self) -> None:
         """创建管理员日志数据库表"""
         self.logdb_cursor.execute(
@@ -35,6 +35,8 @@ class SQLite:
                 tg_id integer,
                 username varchar(128),
                 action text,
+                operated_tg_id integer,
+                operated_u2_id integer,
                 record_time TIMESTAMP
             )
             """
@@ -79,18 +81,27 @@ class SQLite:
             (tg_id, u2_id),
         )
         self.conn.commit()
-    
-    def insert_admin_log(self, tg_id: int, username: str, action: str) -> None:
+
+    def insert_admin_log(
+        self,
+        tg_id: int,
+        username: str,
+        action: str,
+        operated_tg_id: int,
+        operated_u2_id: int,
+    ) -> None:
         """插入管理员日志"""
         self.logdb_cursor.execute(
             """
-            INSERT INTO admin_log (tg_id, username, action, record_time)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO admin_log (tg_id, username, action, record_time, operated_tg_id, operated_u2_id)
+            VALUES (?, ?, ?, ?, ?, ?)
             """,
             (
                 tg_id,
                 username,
                 action,
+                operated_tg_id,
+                operated_u2_id,
                 datetime.now().timestamp() // 1000,
             ),
         )

@@ -36,6 +36,9 @@ def bot_register():
     bot.register_callback_query_handler(
         verify, func=lambda c: c.data.startswith("ver"), pass_bot=True
     )
+    bot.register_callback_query_handler(
+        verify_page, func=lambda c: c.data.startswith("ban")
+    )
 
 
 async def to_reverify(call: CallbackQuery):
@@ -54,6 +57,26 @@ async def approve_join(join_request: ChatJoinRequest):
     else:
         await bot.decline_chat_join_request(join_request.chat.id, tg_id)
     return
+
+
+async def ban_user(call: CallbackQuery):
+    """封禁用户"""
+    _, u2_id, tg_id = call.data.split("|")
+    sql.insert_admin_log(
+        call.from_user.id,
+        call.from_user.last_name,
+        "检测该用户被 U2 封禁, 执行封禁操作",
+        tg_id,
+        u2_id,
+    )
+    await bot.ban_chat_member(config["TG"]["GROUP_ID"], tg_id, revoke_messages=False)
+    await bot.ban_chat_member(config["TG"]["CHANNEL_ID"], tg_id, revoke_messages=False)
+    await bot.answer_callback_query(call.id, "已封禁")
+    return await bot.edit_message_text(
+        f"已封禁并移除用户 ID: `{u2_id}` \\(`{tg_id}`\\)",
+        call.message.chat.id,
+        call.message.message_id,
+    )
 
 
 async def send_reply(message: Message):

@@ -3,8 +3,10 @@ from lxml.etree import HTML
 
 
 class DataAPI:
-    def __init__(self, u2_cookie: str, bark_uel: str):
+    def __init__(self, u2_cookie: str, api_uesr_id: int, api_token: str, bark_uel: str):
         self.u2_cookie = u2_cookie
+        self.api_uesr_id = api_uesr_id
+        self.api_token = api_token
         self.bark_url = bark_uel
         self.s = aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(total=10),
@@ -43,3 +45,17 @@ class DataAPI:
                 "url": f"tg://user?id={tg_user_id}",
             },
         )
+
+    async def get_u2_log(self) -> list:
+        """U2 log API"""
+        async with self.s.get(
+            "https://u2.kysdm.com/api/v1/log",
+            params={
+                "uid": self.api_uesr_id,
+                "token": self.api_token,
+                "maximum": 10,
+            },
+        ) as resp:
+            if resp.status != 200:
+                return []
+            return await resp.json()
