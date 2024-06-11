@@ -37,7 +37,7 @@ def bot_register():
         verify, func=lambda c: c.data.startswith("ver"), pass_bot=True
     )
     bot.register_callback_query_handler(
-        verify_page, func=lambda c: c.data.startswith("ban")
+        verify_page, func=lambda c: c.data.startswith("ban"), is_chat_admin=True
     )
 
 
