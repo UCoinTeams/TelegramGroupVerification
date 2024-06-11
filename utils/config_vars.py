@@ -8,13 +8,6 @@ with open("data/config.yaml", "r") as f:
 
 LOG_LEVEL = config["LOG_LEVEL"]
 
-d_api = DataAPI(
-    u2_cookie=config["U2_COOKIE"],
-    api_uesr_id=config["API_USER_ID"],
-    api_token=config["API_TOKEN"],
-    bark_uel=config["BARK_URL"],
-)
-
 sql = SQLite()
 
 redis = Redis(

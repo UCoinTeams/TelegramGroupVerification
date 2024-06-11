@@ -8,8 +8,9 @@ from telebot.types import (
     CallbackQuery,
 )
 
+from utils.data_api import DataAPI
 from utils.message_text import MessageText
-from utils.config_vars import d_api, redis, sql, config
+from utils.config_vars import redis, sql, config
 
 
 async def verify_page(message: Message, bot: AsyncTeleBot, language: str):
@@ -32,6 +33,12 @@ async def verify(call: CallbackQuery, bot: AsyncTeleBot):
     _, language, u2_id, vcode = call.data.split(
         "|"
     )  # [0'ver', 1'cn', 2'123456', 3'abcde']
+    d_api = DataAPI(
+        u2_cookie=config["U2_COOKIE"],
+        api_uesr_id=config["API_USER_ID"],
+        api_token=config["API_TOKEN"],
+        bark_uel=config["BARK_URL"],
+    )
     msg_text = MessageText(language)
     if degree := redis.get(f"ver:{call.from_user.id}"):
         if int(degree) >= 5:
@@ -63,6 +70,7 @@ async def verify(call: CallbackQuery, bot: AsyncTeleBot):
                 f"➤%20TG_UserID:%20{call.from_user.id}%0a➤%20U2_UserID:%20{u2_id}%0a➤%20语言:%20{language}",
                 call.from_user.id,
             )
+            await d_api.close()
             await bot.delete_message(call.message.chat.id, call.message.message_id)
             await bot.send_message(
                 text=msg_text.Ver_passed(

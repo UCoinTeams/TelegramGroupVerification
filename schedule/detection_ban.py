@@ -71,6 +71,7 @@ async def ban_detection():
             bark_uel=config["BARK_URL"],
         )
         log_list = await d_api.get_u2_log()
+        await d_api.close()
         if not log_list:
             await asyncio.sleep(sleep_time)
             continue

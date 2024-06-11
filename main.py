@@ -6,7 +6,7 @@ from concurrent.futures import ThreadPoolExecutor
 from tgbot import start_bot
 from schedule import ban_detection
 from apiserver import start_server
-from utils.config_vars import LOG_LEVEL, sql, d_api
+from utils.config_vars import LOG_LEVEL, sql
 
 telebot.logger.setLevel(LOG_LEVEL.upper())
 logging.getLogger().setLevel(LOG_LEVEL.upper())
@@ -41,7 +41,6 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("收到退出信号，取消任务...")
         sql.close()
-        d_api.close()
         for task in asyncio.all_tasks():
             task.cancel()
         asyncio.get_event_loop().stop()
