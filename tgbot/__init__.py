@@ -10,6 +10,7 @@ from telebot.types import (
 
 from .start import send_start
 from .uinfo import send_u2info
+from .uadd import send_u2info_add
 from .callback_pages import get_u2_id, test_u2_id, verify_page, verify
 
 from utils.config_vars import config, redis, sql
@@ -29,6 +30,9 @@ def bot_register():
     )
     bot.register_message_handler(
         send_u2info, commands=["uinfo"], is_chat_admin=True, pass_bot=True
+    )
+    bot.register_message_handler(
+        send_u2info_add, commands=["add"], is_chat_admin=True, pass_bot=True
     )
     bot.register_chat_join_request_handler(approve_join)
     # callback_pages
@@ -160,7 +164,9 @@ class IsAdminFilter(SimpleCustomFilter):
                 config["TG"]["GROUP_ID"], message.from_user.id
             )
             return result.status("creator", "administrator")
-        result = await bot.get_chat_member(config["TG"]["GROUP_ID"], message.from_user.id)
+        result = await bot.get_chat_member(
+            config["TG"]["GROUP_ID"], message.from_user.id
+        )
         return result.status in ["creator", "administrator"]
 
 
