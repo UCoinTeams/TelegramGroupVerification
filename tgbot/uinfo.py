@@ -12,10 +12,12 @@ async def send_u2info(message: Message, bot: AsyncTeleBot):
         query_id = message.reply_to_message.from_user.id
     elif len(message_data) == 2:
         query_id = int(message_data[1])
-        if query_id > 100000:  # 判断为tg_id
-            data = sql.inqury_user(query_id)
-        else:
-            data = sql.inqury_user(u2_id=query_id)
+    else:
+        return await bot.reply_to(message, "错误使用")
+    if query_id > 100000:  # 判断为tg_id
+        data = sql.inqury_user(query_id)
+    else:
+        data = sql.inqury_user(u2_id=query_id)
     if bool(data):
         text = "*以下是查询到的信息:*\n"
         for i in data:
