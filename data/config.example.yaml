@@ -8,10 +8,6 @@ TG:
   # Telegram Channel ID
   CHANNEL_ID: -100123123123
   CHANNEL_LINK: https://t.me/joinchat/AAAAAE7J6J1ZzjQ1Q1Q1Q1
-  # Admin ID
-  ADMIN_ID:
-    - 123123123
-    - 123123123
 
 U2_COOKIE: nexusphp_u2=212312dasdawedasdaw1weaqwdadsasdqwdwd1212312313wadqwd;
 API_USER_ID: 23444
