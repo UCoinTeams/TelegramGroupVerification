@@ -93,7 +93,7 @@ class SQLite:
         """插入管理员日志"""
         self.logdb_cursor.execute(
             """
-            INSERT INTO admin_log (tg_id, username, action, record_time, operated_tg_id, operated_u2_id)
+            INSERT INTO admin_log (tg_id, username, action, operated_tg_id, operated_u2_id, record_time)
             VALUES (?, ?, ?, ?, ?, ?)
             """,
             (
@@ -102,7 +102,7 @@ class SQLite:
                 action,
                 operated_tg_id,
                 operated_u2_id,
-                datetime.now().timestamp() // 1000,
+                datetime.now().timestamp() // 1,
             ),
         )
         self.logdb_conn.commit()

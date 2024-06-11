@@ -9,6 +9,7 @@ from telebot.types import (
 )
 
 from .start import send_start
+from .uinfo import send_u2info
 from .callback_pages import get_u2_id, test_u2_id, verify_page, verify
 
 from utils.config_vars import config, redis, sql
@@ -18,12 +19,16 @@ bot = AsyncTeleBot(config["TG"]["BOT_TOKEN"], parse_mode="MarkdownV2")
 
 def bot_register():
     bot.add_custom_filter(IsRreply())
+    bot.add_custom_filter(IsAdminFilter())
     # commands
     bot.register_message_handler(
         send_start, commands=["start"], chat_types=["private"], pass_bot=True
     )
     bot.register_message_handler(
         send_reply, chat_types=["private"], is_reply=True, pass_bot=True
+    )
+    bot.register_message_handler(
+        send_u2info, commands=["uinfo"], is_chat_admin=True, pass_bot=True
     )
     bot.register_chat_join_request_handler(approve_join)
     # callback_pages
@@ -64,7 +69,7 @@ async def ban_user(call: CallbackQuery):
     _, u2_id, tg_id = call.data.split("|")
     sql.insert_admin_log(
         call.from_user.id,
-        call.from_user.last_name,
+        call.from_user.full_name,
         "检测该用户被 U2 封禁, 执行封禁操作",
         tg_id,
         u2_id,
@@ -140,6 +145,23 @@ class IsRreply(SimpleCustomFilter):
             return True
         else:
             return False
+
+
+class IsAdminFilter(SimpleCustomFilter):
+    """判断是否为管理员"""
+
+    key = "is_chat_admin"
+
+    @staticmethod
+    async def check(message):
+        if isinstance(message, CallbackQuery):
+            await bot.answer_callback_query(message.id)
+            result = await bot.get_chat_member(
+                config["TG"]["GROUP_ID"], message.from_user.id
+            )
+            return result.status("creator", "administrator")
+        result = await bot.get_chat_member(config["TG"]["GROUP_ID"], message.from_user.id)
+        return result.status in ["creator", "administrator"]
 
 
 async def start_bot():
