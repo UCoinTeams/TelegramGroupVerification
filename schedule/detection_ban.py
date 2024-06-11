@@ -61,6 +61,8 @@ async def send_log_msg(log_info) -> list:
 
 
 async def ban_detection():
+    """检测 U2 禁用帐号"""
+    sleep_time = 60 * 5
     while True:
         d_api = DataAPI(
             u2_cookie=config["U2_COOKIE"],
@@ -70,9 +72,8 @@ async def ban_detection():
         )
         log_list = await d_api.get_u2_log()
         if not log_list:
-            await asyncio.sleep(60 * 5)
+            await asyncio.sleep(sleep_time)
             continue
-        log_list = log_list["data"]["log"]
         old_id = redis.get("ban_data")
         for log in log_list[::-1]:
             if "禁用帳號" in log["message"]:
@@ -86,4 +87,4 @@ async def ban_detection():
                     continue
         redis.set("ban_data", log_list[0]["id"], ex=3600000)
         await d_api.close()
-        await asyncio.sleep(60 * 5)
+        await asyncio.sleep(sleep_time)

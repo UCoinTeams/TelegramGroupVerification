@@ -58,4 +58,5 @@ class DataAPI:
         ) as resp:
             if resp.status != 200:
                 return []
-            return await resp.json()
+            r = await resp.json()
+            return r["data"]["log"]
