@@ -1,9 +1,11 @@
 import asyncio
 import logging
 import telebot
+from concurrent.futures import ThreadPoolExecutor
 
 from tgbot import start_bot
 from schedule import ban_detection
+from apiserver import start_server
 from utils.config_vars import LOG_LEVEL, sql, d_api
 
 telebot.logger.setLevel(LOG_LEVEL.upper())
@@ -22,6 +24,9 @@ async def main():
         asyncio.create_task(start_bot()),
         asyncio.create_task(ban_detection()),
     ]
+    with ThreadPoolExecutor() as executor:
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(executor, start_server)
     try:
         await asyncio.gather(*tasks)
     except asyncio.CancelledError:

@@ -20,9 +20,10 @@ BARK_URL: https://sctapi.ftqq.com/sadas3123123123
 
 # API Server
 API_SERVER:
-  POST: 6008
-  WEBSITE_BASE: https://oauth.bgm.tv:6008 # 授权回传链接 如需使用 Web 绑定功能则必须为 https
-  AUTH_KEY: sdasd-ee5dsdsf-4asdad5-9dsd0c-8asdaf82
+  HOST: 127.0.0.1
+  PORT: 8099
+  AUTH_KEY: 
+    - sdasd-ee5dsdsf-4asdad5-9dsd0c-8asdaf82
 
 # Redis Server
 REDIS:
