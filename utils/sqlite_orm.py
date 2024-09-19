@@ -76,7 +76,7 @@ class SQLite:
         """删除用户信息"""
         self.cursor.execute(
             """
-            DELETE FROM user WHERE tg_id = ? OR u2_id = ?
+            DELETE FROM user WHERE tg_id = ? AND u2_id = ?
             """,
             (tg_id, u2_id),
         )
