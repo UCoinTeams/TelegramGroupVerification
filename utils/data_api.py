@@ -1,14 +1,15 @@
 import aiohttp
+import logging
 from lxml.etree import HTML
 
 
 class DataAPI:
-    def __init__(self, u2_cookie: str, api_uesr_id: int, api_token: str, bark_uel: str):
+    def __init__(self, u2_cookie: str, api_user_id: int, api_token: str, bark_url: str):
         self.u2_cookie = u2_cookie
-        self.api_uesr_id = api_uesr_id
+        self.api_user_id = api_user_id
         self.api_token = api_token
-        self.bark_url = bark_uel
-        self.s = aiohttp.ClientSession(
+        self.bark_url = bark_url
+        self.session = aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(total=10),
             headers={
                 "Connection": "keep-alive",
@@ -19,44 +20,60 @@ class DataAPI:
         )
 
     async def close(self):
-        await self.s.close()
+        """关闭会话"""
+        if not self.session.closed:
+            await self.session.close()
 
     async def verify_u2_captcha(self, u2_id: int, captcha: str) -> bool:
         """验证 U2 验证码"""
-        async with self.s.get(
-            f"https://u2.dmhy.org/userdetails.php?id={u2_id}",
-            headers={"Cookie": self.u2_cookie},
-        ) as resp:
-            html = HTML(await resp.text(encoding="utf-8"))
-            info_data_list = []
-            for info_data in html.xpath('//a[@class="faqlink"]'):
-                info_data_list.append(info_data.xpath("./@href")[0])
-            if captcha in info_data_list:
-                return True
+        try:
+            async with self.session.get(
+                f"https://u2.dmhy.org/userdetails.php?id={u2_id}",
+                headers={"Cookie": self.u2_cookie},
+            ) as resp:
+                if resp.status != 200:
+                    return False
+                html = HTML(await resp.text(encoding="utf-8"))
+                info_data_list = [
+                    link.get("href") for link in html.xpath('//a[@class="faqlink"]')
+                ]
+                return captcha in info_data_list
+        except aiohttp.ClientError as e:
+            logging.error(f"Error during captcha verification: {e}")
             return False
 
-    async def bark_notify(self, title, content, tg_user_id) -> None:
+    async def bark_notify(self, title: str, content: str, tg_user_id: int) -> None:
         """Bark 推送"""
-        return await self.s.get(
-            f"{self.bark_url}/{title}/{content}",
-            params={
-                "icon": "https://s2.loli.net/2022/02/14/tmAqHOKT1VWp8CR.jpg",
-                "group": "GroupLogin",
-                "url": f"tg://user?id={tg_user_id}",
-            },
-        )
+        try:
+            async with self.session.get(
+                f"{self.bark_url}/{title}/{content}",
+                params={
+                    "icon": "https://s2.loli.net/2022/02/14/tmAqHOKT1VWp8CR.jpg",
+                    "group": "GroupLogin",
+                    "url": f"tg://user?id={tg_user_id}",
+                },
+            ) as resp:
+                if resp.status != 200:
+                    logging.error(f"Bark notification failed with status: {resp.status}")
+        except aiohttp.ClientError as e:
+            logging.error(f"Error during Bark notification: {e}")
 
     async def get_u2_log(self) -> list:
         """U2 log API"""
-        async with self.s.get(
-            "https://u2.kysdm.com/api/v1/log",
-            params={
-                "uid": self.api_uesr_id,
-                "token": self.api_token,
-                "maximum": 10,
-            },
-        ) as resp:
-            if resp.status != 200:
-                return []
-            r = await resp.json()
-            return r["data"]["log"]
+        try:
+            async with self.session.get(
+                "https://u2.kysdm.com/api/v1/log",
+                params={
+                    "uid": self.api_user_id,
+                    "token": self.api_token,
+                    "maximum": 10,
+                },
+            ) as resp:
+                if resp.status != 200:
+                    logging.error(f"Failed to fetch logs with status: {resp.status}")
+                    return []
+                data = await resp.json()
+                return data.get("data", {}).get("log", [])
+        except aiohttp.ClientError as e:
+            logging.error(f"Error during U2 log retrieval: {e}")
+            return []

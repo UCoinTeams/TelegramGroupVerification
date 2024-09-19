@@ -33,12 +33,6 @@ async def verify(call: CallbackQuery, bot: AsyncTeleBot):
     _, language, u2_id, vcode = call.data.split(
         "|"
     )  # [0'ver', 1'cn', 2'123456', 3'abcde']
-    d_api = DataAPI(
-        u2_cookie=config["U2_COOKIE"],
-        api_uesr_id=config["API_USER_ID"],
-        api_token=config["API_TOKEN"],
-        bark_uel=config["BARK_URL"],
-    )
     msg_text = MessageText(language)
     if degree := redis.get(f"ver:{call.from_user.id}"):
         if int(degree) >= 5:
@@ -53,33 +47,41 @@ async def verify(call: CallbackQuery, bot: AsyncTeleBot):
     async with Lock():
         if sql_data := sql.inqury_user(tg_id=call.from_user.id):
             return await bot.answer_callback_query(call.id)
-        if await d_api.verify_u2_captcha(u2_id, vcode):
-            await bot.answer_callback_query(call.id, "ok!")
-            if sql_data := sql.inqury_user(u2_id=u2_id):
-                for i in sql_data:
-                    await bot.unban_chat_member(
-                        chat_id=config["TG"]["GROUP_ID"], user_id=i[1]
-                    )
-                    await bot.unban_chat_member(
-                        chat_id=config["TG"]["CHANNEL_ID"], user_id=i[1]
-                    )
-                    sql.delete_user(tg_id=i[1])
-            sql.insert_user(call.from_user.id, u2_id, language)
-            await d_api.bark_notify(
-                "群组新人验证通过通知",
-                f"➤%20TG_UserID:%20{call.from_user.id}%0a➤%20U2_UserID:%20{u2_id}%0a➤%20语言:%20{language}",
-                call.from_user.id,
+        try:
+            d_api = DataAPI(
+                u2_cookie=config["U2_COOKIE"],
+                api_user_id=config["API_USER_ID"],
+                api_token=config["API_TOKEN"],
+                bark_url=config["BARK_URL"],
             )
+            if await d_api.verify_u2_captcha(u2_id, vcode):
+                await bot.answer_callback_query(call.id, "ok!")
+                if sql_data := sql.inqury_user(u2_id=u2_id):
+                    for i in sql_data:
+                        await bot.unban_chat_member(
+                            chat_id=config["TG"]["GROUP_ID"], user_id=i[1]
+                        )
+                        await bot.unban_chat_member(
+                            chat_id=config["TG"]["CHANNEL_ID"], user_id=i[1]
+                        )
+                        sql.delete_user(tg_id=i[1])
+                sql.insert_user(call.from_user.id, u2_id, language)
+                await d_api.bark_notify(
+                    "群组新人验证通过通知",
+                    f"➤%20TG_UserID:%20{call.from_user.id}%0a➤%20U2_UserID:%20{u2_id}%0a➤%20语言:%20{language}",
+                    call.from_user.id,
+                )
+                await bot.delete_message(call.message.chat.id, call.message.message_id)
+                await bot.send_message(
+                    text=msg_text.Ver_passed(
+                        config["TG"]["GROUP_LINK"], config["TG"]["CHANNEL_LINK"]
+                    ),
+                    chat_id=call.message.chat.id,
+                )
+            else:
+                await bot.answer_callback_query(call.id, "error!")
+                return await bot.send_message(
+                    text=msg_text.Not_detected(), chat_id=call.message.chat.id
+                )
+        finally:
             await d_api.close()
-            await bot.delete_message(call.message.chat.id, call.message.message_id)
-            await bot.send_message(
-                text=msg_text.Ver_passed(
-                    config["TG"]["GROUP_LINK"], config["TG"]["CHANNEL_LINK"]
-                ),
-                chat_id=call.message.chat.id,
-            )
-        else:
-            await bot.answer_callback_query(call.id, "error!")
-            return await bot.send_message(
-                text=msg_text.Not_detected(), chat_id=call.message.chat.id
-            )

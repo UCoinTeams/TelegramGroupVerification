@@ -64,14 +64,16 @@ async def ban_detection():
     """检测 U2 禁用帐号"""
     sleep_time = 60 * 5
     while True:
-        d_api = DataAPI(
-            u2_cookie=config["U2_COOKIE"],
-            api_uesr_id=config["API_USER_ID"],
-            api_token=config["API_TOKEN"],
-            bark_uel=config["BARK_URL"],
-        )
-        log_list = await d_api.get_u2_log()
-        await d_api.close()
+        try:
+            d_api = DataAPI(
+                u2_cookie=config["U2_COOKIE"],
+                api_user_id=config["API_USER_ID"],
+                api_token=config["API_TOKEN"],
+                bark_url=config["BARK_URL"],
+            )
+            log_list = await d_api.get_u2_log()
+        finally:
+            await d_api.close()
         if not log_list:
             await asyncio.sleep(sleep_time)
             continue
