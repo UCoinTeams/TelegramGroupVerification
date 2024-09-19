@@ -35,6 +35,9 @@ def bot_register():
     bot.register_message_handler(
         send_u2info_add, commands=["add"], is_chat_admin=True, pass_bot=True
     )
+    bot.register_message_handler(
+        send_u2info_unadd, commands=["unadd"], is_chat_admin=True, pass_bot=True
+    )
     bot.register_chat_join_request_handler(approve_join)
     # callback_pages
     bot.register_callback_query_handler(
