@@ -11,7 +11,7 @@ from telebot.types import (
 
 from .start import send_start
 from .uinfo import send_u2info
-from .uadd import send_u2info_add
+from .uadd import send_u2info_add, send_u2info_unadd
 from .callback_pages import get_u2_id, test_u2_id, verify_page, verify
 
 from utils.config_vars import config, redis, sql
