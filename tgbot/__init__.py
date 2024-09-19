@@ -5,6 +5,7 @@ from telebot.types import (
     CallbackQuery,
     ChatJoinRequest,
     Message,
+    ReplyParameters,
     BotCommandScopeAllPrivateChats,
 )
 
@@ -100,7 +101,7 @@ async def send_reply(message: Message):
         return await bot.send_message(
             message.chat.id,
             "未检测到这条消息的数据，请重新开始。\n\nNo data detected for this message, please start again\\.\n\nこのメッセージのデータが検出されませんでした。\nもう一度やり直してください。",
-            reply_to_message_id=message.message_id,
+            reply_parameters=ReplyParameters(message.message_id),
         )
 
 
